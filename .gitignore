@@ -1,0 +1,55 @@
+
+# Archivos de Entorno y Claves Secretas
+
+.env
+*.env
+.env.local
+
+
+# Entornos Virtuales de Python
+
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+
+# Archivos de Caché de Python
+
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+
+# Base de Datos y Persistencia Local
+
+*.db
+*.sqlite3
+data/bot_database.db
+
+
+# Modelos: classic_model.joblib SÍ se versiona (es el modelo entregado)
+models/*.pkl
+
+data/processed/*.csv
+
+
+# Configuración de IDE y Sistema Operativo
+
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+# Modelo RoBERTa afinado (pesa ~500 MB)
+models/roberta_finetuned/
+data/processed/label_review.csv
+models/pretrained/
+
+# Registro local de la vigilancia de Bluesky
+data/vigilancia_bluesky.json
+
+# Copias de seguridad de la base de datos
+backups/

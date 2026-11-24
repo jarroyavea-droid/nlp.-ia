@@ -1,37 +1,37 @@
 {
-  "entrenado_en": "2026-10-29T16:22:44",
+  "entrenado_en": "2026-11-24T16:45:09",
   "binario": {
     "modelo": "logreg_C5",
     "cv_scores": {
-      "logreg_C1": 0.8151577326059745,
-      "logreg_C5": 0.8206073086679883,
-      "svm_calibrada": 0.8129378069592569
+      "logreg_C1": 0.8138288822292001,
+      "logreg_C5": 0.8160821313421568,
+      "svm_calibrada": 0.8082394090118219
     },
-    "umbral": 0.4,
-    "f1_ciberacoso": 0.8194622279129321,
-    "precision_ciberacoso": 0.7720144752714113,
-    "recall_ciberacoso": 0.8731241473396999,
-    "f1_seguro": 0.843680709534368,
-    "f1_colombia": 0.7594594594594595,
-    "accuracy": 0.8324420677361853,
+    "umbral": 0.42,
+    "f1_ciberacoso": 0.8268370607028754,
+    "precision_ciberacoso": 0.7776442307692307,
+    "recall_ciberacoso": 0.8826739427012278,
+    "f1_seguro": 0.8505239933811363,
+    "f1_colombia": 0.7656675749318801,
+    "accuracy": 0.8395500296033156,
     "matriz_confusion": [
       [
-        761,
-        189
+        771,
+        185
       ],
       [
-        93,
-        640
+        86,
+        647
       ]
     ],
-    "n_train": 6730,
-    "n_test": 1683
+    "n_train": 6754,
+    "n_test": 1689
   },
   "gravedad": {
     "modelo": "svm_calibrada",
     "cv_scores": {
-      "logreg_C1": 0.8457965750653755,
-      "logreg_C5": 0.8535887755771615,
+      "logreg_C1": 0.8462445778107102,
+      "logreg_C5": 0.8548251384256833,
       "svm_calibrada": 0.8587867862956481
     },
     "f1_macro": 0.910193375379949,

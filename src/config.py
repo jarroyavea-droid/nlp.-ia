@@ -1,4 +1,4 @@
-"""Configuración del detector (rutas del modelo, categorías y umbrales)."""
+"""Configuración del detector de ciberacoso (rutas, categorías y umbrales)."""
 
 import os
 from pathlib import Path
@@ -11,7 +11,32 @@ except ImportError:  # python-dotenv es opcional
   pass
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = BASE_DIR / 'data'
+RAW_DIR = DATA_DIR / 'raw'
+PROCESSED_DIR = DATA_DIR / 'processed'
 MODELS_DIR = BASE_DIR / 'models'
+
+# Fuentes de datos
+COLOMBIAN_CSV = RAW_DIR / 'colombian_cyberbullying.csv'
+CORPUS_CSV = RAW_DIR / 'CorpusBullying.csv'
+REFUERZO_CSV = RAW_DIR / 'refuerzo_Categoria.csv'
+LEGACY_FEEDBACK_CSV = RAW_DIR / 'feedback_admin.csv'
+# Correcciones manuales de etiquetas (texto, categoria_corregida)
+LABEL_CORRECTIONS_CSV = RAW_DIR / 'label_corrections.csv'
+LABEL_REVIEW_CSV = PROCESSED_DIR / 'label_review.csv'
+
+# Datasets en inglés (Twitter racismo/sexismo y YouTube). Se traducen una sola
+# vez con "python main.py traducir" y se cachean en data/processed/.
+ENGLISH_DATASETS = [
+    {'file': RAW_DIR / 'twitter_racism_parsed_dataset.csv',
+     'col_text': 'Text', 'col_label': 'oh_label', 'col_annot': 'Annotation'},
+    {'file': RAW_DIR / 'twitter_sexism_parsed_dataset.csv',
+     'col_text': 'Text', 'col_label': 'oh_label', 'col_annot': 'Annotation'},
+    {'file': RAW_DIR / 'youtube_parsed_dataset.csv',
+     'col_text': 'Text', 'col_label': 'oh_label', 'col_annot': None},
+]
+ENGLISH_TRANSLATED_CSV = PROCESSED_DIR / 'ingles_traducido.csv'
+
 
 # Artefactos de modelos
 CLASSIC_MODEL_PATH = MODELS_DIR / 'classic_model.joblib'
@@ -27,7 +52,11 @@ def _local_or_hub(repo_id: str) -> str:
   return str(local) if (local / '.complete').exists() else repo_id
 
 
-# Modelo de respaldo cuando no existe el fine-tuning propio
+# RoBERTuito: RoBERTa preentrenado con tweets en español
+ROBERTA_BASE_MODEL = os.getenv(
+    'ROBERTA_BASE_MODEL', _local_or_hub('pysentimiento/robertuito-base-uncased')
+)
+# Modelo de respaldo cuando aún no existe el fine-tuning propio
 ROBERTA_ZERO_SHOT_MODEL = os.getenv(
     'ROBERTA_ZERO_SHOT_MODEL', _local_or_hub('pysentimiento/robertuito-hate-speech')
 )
@@ -58,3 +87,5 @@ UNCERTAINTY_MARGIN = float(os.getenv('UNCERTAINTY_MARGIN', '0.20'))
 MIN_CLASS_F1 = float(os.getenv('MIN_CLASS_F1', '0.60'))
 # Peso de RoBERTa al fusionar probabilidades
 ROBERTA_WEIGHT = float(os.getenv('ROBERTA_WEIGHT', '0.70'))
+
+RANDOM_STATE = 42

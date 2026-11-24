@@ -4,15 +4,13 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from app.services.predictor import predecir_ciberacoso
-from scripts.train_pipeline import ejecutar_pipeline, actualizar_dataset_maestro
+from src.train import train_classic
 
 
 def cargarDatasetet():
     print("\n\t == MÓDULO DE ENTRENAMIENTO Y ACTUALIZACIÓN ==")
-    # 1. Homologa y fusiona los nuevos CSVs en el dataset maestro
-    actualizar_dataset_maestro()
-    # 2. Reentrena el modelo con los datos unificados
-    ejecutar_pipeline()
+    # Unifica los datasets de data/raw y reentrena el modelo clásico
+    train_classic()
 
 
 def prueba_por_consola():
@@ -33,7 +31,8 @@ def prueba_por_consola():
             print("\n-- IMPRIMIENDO RESULTADO DEL ANÁLISIS --")
             print(f"Texto limpio:    {resultado['texto_limpio']}")
             print(f"Categoría:       {resultado['categoria_detectada']}")
-            print(f"Confianza/Prob:  {resultado['probabilidad'] * 100:.2f}%\n")
+            print(f"Confianza/Prob:  {resultado['probabilidad'] * 100:.2f}%")
+            print(f"Acción sugerida: {resultado['accion_sugerida']}\n")
         except Exception as e:
             print(f"Error en la predicción (¿Ya entrenaste el modelo?): {e}")
 

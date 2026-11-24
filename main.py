@@ -1,8 +1,10 @@
-"""Detector de ciberacoso — consola de pruebas.
+"""Detector de ciberacoso — punto de entrada.
 
-    python main.py                 consola interactiva (clásico + RoBERTa)
-    python main.py --sin-roberta   consola sólo con el modelo clásico
-    python main.py "texto"         analiza un mensaje y sale
+    python main.py                 consola interactiva de pruebas
+    python main.py train           entrena el modelo clásico
+    python main.py train-roberta   fine-tuning de RoBERTuito (5 categorías)
+    python main.py audit           detecta etiquetas sospechosas en el dataset
+    python main.py traducir        traduce los datasets en inglés (una vez)
 """
 
 import argparse
@@ -57,28 +59,29 @@ def run_interactive_cli(use_roberta: bool):
 
 def main():
   parser = argparse.ArgumentParser(description='Detector de ciberacoso')
-  parser.add_argument('texto', nargs='*', help='Mensaje a analizar (opcional)')
-  parser.add_argument('--sin-roberta', action='store_true',
-                      help='Usar sólo el modelo clásico')
-  parser.add_argument('--json', action='store_true',
-                      help='Imprimir el resultado completo en JSON')
-  args = parser.parse_args()
+  sub = parser.add_subparsers(dest='cmd')
+  cli = sub.add_parser('cli', help='Consola interactiva (por defecto)')
+  cli.add_argument('--sin-roberta', action='store_true')
+  sub.add_parser('train', help='Entrena el modelo clásico')
+  sub.add_parser('train-roberta', help='Fine-tuning de RoBERTuito', add_help=False)
+  sub.add_parser('audit', help='Audita etiquetas del dataset')
+  sub.add_parser('traducir', help='Traduce los datasets en inglés', add_help=False)
+  args, extra = parser.parse_known_args()
 
-  if args.texto:
-    import json
-    from src.predict import CyberbullyingDetector
-
-    detector = CyberbullyingDetector(use_roberta=not args.sin_roberta)
-    detector.warmup()
-    r = detector.predict(' '.join(args.texto))
-    if args.json:
-      print(json.dumps(r, ensure_ascii=False, indent=2))
-    else:
-      print(f'{r["categoria_nombre"]} | confianza {r["confianza"]:.2f} | '
-            f'{r["accion_sugerida"]} | motor {r["motor"]}')
-    return
-
-  run_interactive_cli(use_roberta=not args.sin_roberta)
+  if args.cmd == 'train':
+    from src.train import train_classic
+    train_classic()
+  elif args.cmd == 'train-roberta':
+    from src.train_transformer import main as train_roberta
+    train_roberta(extra)
+  elif args.cmd == 'audit':
+    from src.label_audit import audit_labels
+    audit_labels()
+  elif args.cmd == 'traducir':
+    from src.translate_english import main as run_traducir
+    run_traducir(extra)
+  else:
+    run_interactive_cli(use_roberta=not getattr(args, 'sin_roberta', False))
 
 
 if __name__ == '__main__':
